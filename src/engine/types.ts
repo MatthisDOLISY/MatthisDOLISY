@@ -12,6 +12,8 @@ export interface IdentityParams {
   location: string;
   businessModel: string;
   description: string;
+  /** Sous-secteur de référence pour les benchmarks ("auto" = détection automatique). */
+  benchmarkSector: string;
 }
 
 export interface InvestmentParams {

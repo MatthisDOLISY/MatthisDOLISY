@@ -118,7 +118,7 @@ export function exportPdf(
 
   <h1>3. Analyse financière</h1>
   <p>L'investissement total s'élève à ${fmtEUR(f.totalInvestment)}, financé par ${fmtEUR(p.investment.equity)} d'apport et ${fmtEUR(p.investment.debt)} de dette.</p>
-  <h2>Résumé d'analyse — <span class="profile">${esc(s.profileLabel)}</span></h2>
+  <h2>Résumé d'analyse — <span class="profile">${esc(s.profileLabel)} · réf. ${esc(s.benchmarkLabel)}</span></h2>
   ${insightsList(s.narrative)}
   <h2>Indicateurs clés (avec benchmarks)</h2>
   <table><thead><tr><th>Indicateur</th><th class="val">Valeur</th><th>Référence</th></tr></thead><tbody>${kpiRows}</tbody></table>

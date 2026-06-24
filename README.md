@@ -19,6 +19,8 @@ Application d'évaluation de business : elle articule **plusieurs niveaux d'anal
 ### Modèles de secteur préconfigurés
 Chargez en un clic un projet type : **SaaS B2B, e-commerce/DNVB, restauration, immobilier locatif, franchise** (ou le café-coworking par défaut).
 
+Les **benchmarks des KPI sont calibrés par sous-secteur** (SaaS, abonnement B2C, fitness, restauration, e-commerce, retail, immobilier résidentiel/commercial) — détectés automatiquement ou choisis manuellement. Le **CAC est calculé de façon affinée** (clients réellement acquis chaque année : croissance nette + remplacement du churn).
+
 ### Pilotage
 - **Panneau de paramètres** : modifiez n'importe quelle hypothèse (investissement, localisation, prix, charges, tendances…) → tout se recalcule en direct.
 - **Assistant LLM intégré** : discutez de vos changements (« et si je m'installe à Bordeaux ? », « passe le CAPEX à 250k »). Le LLM propose des **changements de paramètres applicables en un clic**.

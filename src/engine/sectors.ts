@@ -33,6 +33,7 @@ export const sectorPresets: SectorPreset[] = [
           businessModel: "Abonnement mensuel SaaS pour PME",
           description:
             "Plateforme SaaS d'automatisation des opérations pour PME, vendue en abonnement récurrent.",
+          benchmarkSector: "saas",
         };
         p.investment = { capex: 120000, workingCapital: 60000, depreciationYears: 3, equity: 100000, debt: 80000, interestRate: 0.06, loanTermYears: 5 };
         p.revenue = { model: "recurrent", unitsYear1: 0, pricePerUnit: 0, customersYear1: 150, arpu: 1800, churnRate: 0.12, growthRate: 0.6, rampUpYear1: 0.5 };
@@ -53,6 +54,7 @@ export const sectorPresets: SectorPreset[] = [
           businessModel: "Vente en ligne directe (DNVB) de produits écoresponsables",
           description:
             "Marque digitale native vendant des produits maison écoresponsables, modèle unitaire volume × prix.",
+          benchmarkSector: "ecommerce",
         };
         p.investment = { capex: 90000, workingCapital: 80000, depreciationYears: 5, equity: 70000, debt: 100000, interestRate: 0.05, loanTermYears: 6 };
         p.revenue = { model: "unitaire", unitsYear1: 12000, pricePerUnit: 45, customersYear1: 0, arpu: 0, churnRate: 0, growthRate: 0.35, rampUpYear1: 0.6 };
@@ -73,6 +75,7 @@ export const sectorPresets: SectorPreset[] = [
           businessModel: "Restaurant de cuisine de saison, service midi et soir",
           description:
             "Restaurant de 60 couverts, cuisine de saison, modèle unitaire (couverts × ticket moyen).",
+          benchmarkSector: "restaurant",
         };
         p.investment = { capex: 250000, workingCapital: 25000, depreciationYears: 9, equity: 110000, debt: 165000, interestRate: 0.045, loanTermYears: 8 };
         p.revenue = { model: "unitaire", unitsYear1: 22000, pricePerUnit: 32, customersYear1: 0, arpu: 0, churnRate: 0, growthRate: 0.08, rampUpYear1: 0.7 };
@@ -94,6 +97,7 @@ export const sectorPresets: SectorPreset[] = [
           businessModel: "Acquisition et location d'un petit immeuble de rapport",
           description:
             "Achat d'un immeuble de 6 logements mis en location longue durée, gestion passive via mandat.",
+          benchmarkSector: "immobilier_residentiel",
         };
         p.investment = { capex: 600000, workingCapital: 10000, depreciationYears: 25, equity: 150000, debt: 460000, interestRate: 0.04, loanTermYears: 20 };
         p.revenue = { model: "recurrent", unitsYear1: 0, pricePerUnit: 0, customersYear1: 6, arpu: 9600, churnRate: 0.1, growthRate: 0.02, rampUpYear1: 0.9 };
@@ -116,6 +120,7 @@ export const sectorPresets: SectorPreset[] = [
           businessModel: "Exploitation d'une franchise de salle de sport à l'abonnement",
           description:
             "Ouverture d'une salle de sport en franchise, abonnements mensuels, concept et process fournis par le franchiseur.",
+          benchmarkSector: "fitness",
         };
         p.investment = { capex: 320000, workingCapital: 20000, depreciationYears: 8, equity: 120000, debt: 220000, interestRate: 0.05, loanTermYears: 7 };
         p.revenue = { model: "recurrent", unitsYear1: 0, pricePerUnit: 0, customersYear1: 1200, arpu: 540, churnRate: 0.25, growthRate: 0.12, rampUpYear1: 0.6 };

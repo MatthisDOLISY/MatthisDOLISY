@@ -10,6 +10,7 @@ export const defaultParameters: BusinessParameters = {
       "Lieu hybride café de spécialité + espaces de coworking à l'abonnement",
     description:
       "Ouverture d'un lieu de 200 m² combinant café de spécialité et postes de coworking en abonnement mensuel, ciblant freelances et indépendants.",
+    benchmarkSector: "auto",
   },
   investment: {
     capex: 180000,

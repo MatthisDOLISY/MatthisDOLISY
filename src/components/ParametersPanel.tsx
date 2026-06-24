@@ -1,6 +1,7 @@
 import React from "react";
 import { useApp } from "../state";
 import { sectorPresets } from "../engine/sectors";
+import { benchmarkSectorOptions } from "../engine/benchmarks";
 
 interface FieldProps {
   label: string;
@@ -115,6 +116,13 @@ export function ParametersPanel() {
         <Field label="Secteur" path="identity.sector" value={p.identity.sector} type="text" />
         <Field label="Localisation" path="identity.location" value={p.identity.location} type="text" />
         <Field label="Modèle économique" path="identity.businessModel" value={p.identity.businessModel} type="text" />
+        <Field
+          label="Benchmarks de référence"
+          path="identity.benchmarkSector"
+          value={p.identity.benchmarkSector}
+          type="select"
+          options={benchmarkSectorOptions}
+        />
       </Group>
 
       <Group title="💰 Investissement & financement">

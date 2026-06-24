@@ -19,7 +19,7 @@ export function FinancialModule() {
 
       <Section
         title="Résumé d'analyse & indicateurs clés"
-        right={<span className="profile-tag">{summary.profileLabel}</span>}
+        right={<span className="profile-tag">{summary.profileLabel} · réf. {summary.benchmarkLabel}</span>}
       >
         <ul className="insights">
           {summary.narrative.map((n, i) => (

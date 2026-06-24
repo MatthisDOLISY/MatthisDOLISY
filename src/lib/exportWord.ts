@@ -93,7 +93,7 @@ export async function exportWord(
     )} d'apport et ${fmtEUR(p.investment.debt)} de dette.`
   );
 
-  h2(`Résumé d'analyse — ${summary.profileLabel}`);
+  h2(`Résumé d'analyse — ${summary.profileLabel} (benchmarks : ${summary.benchmarkLabel})`);
   for (const n of summary.narrative) para(n);
 
   h2("Indicateurs clés");
