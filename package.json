@@ -1,0 +1,37 @@
+{
+  "name": "business-evaluator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Application d'évaluation de business : analyse financière, opérationnelle et marché, avec LLM intégré et livrables Excel/Word éditables.",
+  "scripts": {
+    "dev": "concurrently -k -n SERVER,CLIENT -c blue,green \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:client": "vite",
+    "dev:server": "node server/index.js",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "start": "node server/index.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2",
+    "docx": "^9.1.0",
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.7",
+    "@types/node": "^22.10.2",
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.5"
+  }
+}
