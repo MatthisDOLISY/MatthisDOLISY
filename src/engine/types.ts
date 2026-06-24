@@ -81,6 +81,7 @@ export interface GlobalParams {
   horizonYears: number; // horizon d'analyse (ex: 5)
   discountRate: number; // taux d'actualisation pour la VAN (0-1)
   taxRate: number; // taux d'IS (0-1)
+  perpetualGrowthRate: number; // croissance perpétuelle pour la valeur terminale (0-1)
 }
 
 export interface BusinessParameters {

@@ -2,6 +2,7 @@ import React from "react";
 import { useApp } from "../state";
 import { Section, Stat, ScoreBar, InsightList, Badge } from "./common";
 import { Comments } from "./Comments";
+import { LineChart } from "./charts";
 import { fmtEUR, fmtPct, fmtNum } from "../lib/format";
 
 export function FinancialModule() {
@@ -16,7 +17,8 @@ export function FinancialModule() {
 
       <div className="stat-row">
         <Stat label="Investissement total" value={fmtEUR(f.totalInvestment)} />
-        <Stat label="VAN" value={fmtEUR(f.npv)} hint={`taux ${fmtPct(params.global.discountRate)}`} />
+        <Stat label="VAN" value={fmtEUR(f.npv)} hint={`incl. valeur terminale`} />
+        <Stat label="Valeur terminale (actualisée)" value={fmtEUR(f.terminalValue)} hint={`croissance perpét. ${fmtPct(params.global.perpetualGrowthRate)}`} />
         <Stat label="TRI" value={f.irr !== null ? fmtPct(f.irr) : "—"} />
         <Stat label="ROI cumulé" value={fmtPct(f.roi)} />
         <Stat label="Délai de retour" value={f.paybackYears !== null ? `${f.paybackYears.toFixed(1)} ans` : "Non atteint"} />
@@ -33,6 +35,19 @@ export function FinancialModule() {
 
       <Section title="Points clés">
         <InsightList items={mod.insights} />
+      </Section>
+
+      <Section title="Trajectoire financière">
+        <LineChart
+          labels={f.years.map((y) => `A${y.year}`)}
+          formatY={(v) => `${Math.round(v / 1000)}k`}
+          series={[
+            { label: "Chiffre d'affaires", color: "#2563eb", points: f.years.map((y) => y.revenue) },
+            { label: "EBITDA", color: "#16a34a", points: f.years.map((y) => y.ebitda) },
+            { label: "Résultat net", color: "#ca8a04", points: f.years.map((y) => y.netIncome) },
+            { label: "Cash-flow cumulé", color: "#dc2626", points: f.years.map((y) => y.cumulativeCashFlow) },
+          ]}
+        />
       </Section>
 
       <Section title="Projection financière">

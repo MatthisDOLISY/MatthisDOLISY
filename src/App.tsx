@@ -8,6 +8,8 @@ import { OperationalModule } from "./components/OperationalModule";
 import { MarketModule } from "./components/MarketModule";
 import { BusinessPlanModule } from "./components/BusinessPlanModule";
 import { InvestmentDocModule } from "./components/InvestmentDocModule";
+import { SensitivityModule } from "./components/SensitivityModule";
+import { VariantsModule } from "./components/VariantsModule";
 import { Badge } from "./components/common";
 
 type Tab =
@@ -15,6 +17,8 @@ type Tab =
   | "financier"
   | "operationnel"
   | "marche"
+  | "sensibilite"
+  | "variantes"
   | "business-plan"
   | "investissement";
 
@@ -23,6 +27,8 @@ const TABS: { id: Tab; label: string }[] = [
   { id: "financier", label: "💰 Financier" },
   { id: "operationnel", label: "⚙️ Opérationnel" },
   { id: "marche", label: "🌍 Marché" },
+  { id: "sensibilite", label: "🎚️ Sensibilité" },
+  { id: "variantes", label: "🔀 Variantes" },
   { id: "business-plan", label: "📊 Business Plan (Excel)" },
   { id: "investissement", label: "📄 Document (Word)" },
 ];
@@ -72,6 +78,8 @@ function Shell() {
             {tab === "financier" && <FinancialModule />}
             {tab === "operationnel" && <OperationalModule />}
             {tab === "marche" && <MarketModule />}
+            {tab === "sensibilite" && <SensitivityModule />}
+            {tab === "variantes" && <VariantsModule />}
             {tab === "business-plan" && <BusinessPlanModule />}
             {tab === "investissement" && <InvestmentDocModule />}
           </div>

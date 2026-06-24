@@ -1,9 +1,19 @@
-import React, { createContext, useContext, useMemo, useState, useCallback } from "react";
+import React, { createContext, useContext, useMemo, useState, useCallback, useEffect } from "react";
 import type { BusinessParameters, Comment, AnalysisModule } from "./engine/types";
 import { defaultParameters, cloneParams } from "./engine/defaults";
 import { computeFinance, type FinanceResult } from "./engine/finance";
 import { analyzeGlobal, type GlobalAnalysis } from "./engine/scoring";
 import { uid } from "./lib/format";
+import { setByPath } from "./lib/paths";
+
+export interface Variant {
+  id: string;
+  name: string;
+  params: BusinessParameters;
+  savedAt: number;
+}
+
+const LS_VARIANTS = "be.variants";
 
 interface AppState {
   params: BusinessParameters;
@@ -18,32 +28,17 @@ interface AppState {
   updateParam: (path: string, value: unknown) => void;
   updateParams: (changes: Record<string, unknown>) => void;
   resetParams: () => void;
+  loadParams: (p: BusinessParameters) => void;
+  variants: Variant[];
+  saveVariant: (name: string) => void;
+  deleteVariant: (id: string) => void;
+  loadVariant: (id: string) => void;
   addComment: (module: AnalysisModule, target: string, text: string) => void;
   toggleComment: (id: string) => void;
   removeComment: (id: string) => void;
 }
 
 const Ctx = createContext<AppState | null>(null);
-
-// Applique une valeur sur un chemin pointé (ex: "investment.capex") de façon immuable.
-function setByPath(obj: any, path: string, value: unknown): any {
-  const keys = path.split(".");
-  const clone = structuredClone(obj);
-  let cur = clone;
-  for (let i = 0; i < keys.length - 1; i++) {
-    cur = cur[keys[i]];
-    if (cur === undefined) return clone;
-  }
-  const last = keys[keys.length - 1];
-  // Conserve le type numérique si la cible d'origine est un nombre
-  if (typeof cur[last] === "number" && typeof value === "string") {
-    const n = parseFloat(value);
-    cur[last] = isNaN(n) ? cur[last] : n;
-  } else {
-    cur[last] = value;
-  }
-  return clone;
-}
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [params, setParams] = useState<BusinessParameters>(() =>
@@ -84,6 +79,50 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const resetParams = useCallback(() => setParams(cloneParams(defaultParameters)), []);
+  const loadParams = useCallback((p: BusinessParameters) => setParams(cloneParams(p)), []);
+
+  // --- Variantes (persistées en localStorage) ---
+  const [variants, setVariants] = useState<Variant[]>(() => {
+    try {
+      const raw = localStorage.getItem(LS_VARIANTS);
+      return raw ? (JSON.parse(raw) as Variant[]) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(LS_VARIANTS, JSON.stringify(variants));
+    } catch {
+      /* quota / mode privé : on ignore */
+    }
+  }, [variants]);
+
+  const saveVariant = useCallback(
+    (name: string) => {
+      setVariants((v) => [
+        ...v,
+        { id: uid(), name: name.trim() || `Variante ${v.length + 1}`, params: cloneParams(params), savedAt: Date.now() },
+      ]);
+    },
+    [params]
+  );
+
+  const deleteVariant = useCallback((id: string) => {
+    setVariants((v) => v.filter((x) => x.id !== id));
+  }, []);
+
+  const loadVariant = useCallback(
+    (id: string) => {
+      setVariants((v) => {
+        const found = v.find((x) => x.id === id);
+        if (found) setParams(cloneParams(found.params));
+        return v;
+      });
+    },
+    []
+  );
 
   const addComment = useCallback(
     (module: AnalysisModule, target: string, text: string) => {
@@ -118,6 +157,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     updateParam,
     updateParams,
     resetParams,
+    loadParams,
+    variants,
+    saveVariant,
+    deleteVariant,
+    loadVariant,
     addComment,
     toggleComment,
     removeComment,

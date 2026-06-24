@@ -10,7 +10,14 @@ Application d'évaluation de business : elle articule **plusieurs niveaux d'anal
 - **💰 Financier** — investissement, financement, compte de résultat, cash-flow, **VAN, TRI, ROI, délai de retour, DSCR, seuil de rentabilité**.
 - **⚙️ Opérationnel** — **gestion active / passive** : dépendance au dirigeant, automatisation, maturité des process, indépendance à l'homme-clé.
 - **🌍 Marché** — **contraintes réglementaires**, **barrières à l'entrée**, **scalabilité**, et **projection au regard des hyper-tendances** sociétales, sociales et économiques.
-- **🧭 Synthèse globale** — score pondéré, verdict, **matrice SWOT** qui articule tous les modules.
+- **🧭 Synthèse globale** — score pondéré, verdict, **matrice SWOT** et **radar** qui articulent tous les modules.
+- **🎚️ Sensibilité & scénarios** — scénarios **pessimiste / base / optimiste** + **analyse de sensibilité** d'un levier clé (±30 %) sur la VAN, le TRI et le score.
+- **🔀 Comparaison de variantes** — enregistrez plusieurs versions (ex: Lyon vs Bordeaux) et comparez-les côte à côte.
+
+> Les indicateurs financiers incluent une **valeur terminale** (modèle de Gordon-Shapiro), affichée séparément pour la transparence. Des **graphiques** (courbes, barres, radar) illustrent chaque analyse.
+
+### Modèles de secteur préconfigurés
+Chargez en un clic un projet type : **SaaS B2B, e-commerce/DNVB, restauration, immobilier locatif, franchise** (ou le café-coworking par défaut).
 
 ### Pilotage
 - **Panneau de paramètres** : modifiez n'importe quelle hypothèse (investissement, localisation, prix, charges, tendances…) → tout se recalcule en direct.

@@ -21,6 +21,7 @@ export interface YearLine {
 export interface FinanceResult {
   years: YearLine[];
   totalInvestment: number;
+  terminalValue: number; // valeur terminale (revente / valeur de continuation) actualisée incluse dans la VAN
   npv: number;
   irr: number | null;
   paybackYears: number | null;
@@ -203,8 +204,24 @@ export function computeFinance(p: BusinessParameters): FinanceResult {
     });
   }
 
-  const npv = computeNPV(p.global.discountRate, fcfSeries);
-  const irr = computeIRR(fcfSeries);
+  // Valeur terminale : on capitalise le flux d'exploitation normatif de la
+  // dernière année (EBITDA - impôt) selon le modèle de Gordon-Shapiro.
+  // C'est ce qui représente la revente / la valeur de continuation au-delà de l'horizon.
+  const lastNormCF = fcfSeries[fcfSeries.length - 1]; // EBITDA - impôt de la dernière année
+  const g = Math.min(p.global.perpetualGrowthRate, p.global.discountRate - 0.005);
+  const terminalUndiscounted =
+    p.global.discountRate > g && lastNormCF > 0
+      ? (lastNormCF * (1 + g)) / (p.global.discountRate - g)
+      : 0;
+  const terminalValue =
+    terminalUndiscounted / Math.pow(1 + p.global.discountRate, horizon);
+
+  // Flux pour la valorisation : on ajoute la valeur terminale à la dernière année.
+  const valuationFlows = [...fcfSeries];
+  valuationFlows[valuationFlows.length - 1] += terminalUndiscounted;
+
+  const npv = computeNPV(p.global.discountRate, valuationFlows);
+  const irr = computeIRR(valuationFlows);
 
   // Payback : première année où le cumul (hors financement) repasse positif
   let paybackYears: number | null = null;
@@ -243,6 +260,7 @@ export function computeFinance(p: BusinessParameters): FinanceResult {
   return {
     years,
     totalInvestment,
+    terminalValue,
     npv,
     irr,
     paybackYears,

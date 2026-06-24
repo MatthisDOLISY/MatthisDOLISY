@@ -92,7 +92,8 @@ export async function exportWord(
   );
   children.push(
     indicatorsTable([
-      ["VAN", fmtEUR(f.npv)],
+      ["Valeur terminale (actualisée)", fmtEUR(f.terminalValue)],
+      ["VAN (incl. valeur terminale)", fmtEUR(f.npv)],
       ["TRI", f.irr !== null ? fmtPct(f.irr) : "—"],
       ["ROI cumulé", fmtPct(f.roi)],
       ["Délai de retour", f.paybackYears !== null ? `${f.paybackYears.toFixed(1)} ans` : "Non atteint"],

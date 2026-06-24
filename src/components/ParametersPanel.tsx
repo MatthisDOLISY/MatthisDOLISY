@@ -1,5 +1,6 @@
 import React from "react";
 import { useApp } from "../state";
+import { sectorPresets } from "../engine/sectors";
 
 interface FieldProps {
   label: string;
@@ -67,8 +68,14 @@ function Group({ title, children }: { title: string; children: React.ReactNode }
 }
 
 export function ParametersPanel() {
-  const { params, resetParams } = useApp();
+  const { params, resetParams, loadParams } = useApp();
   const p = params;
+
+  function pickSector(id: string) {
+    const preset = sectorPresets.find((s) => s.id === id);
+    if (preset) loadParams(preset.build());
+  }
+
   return (
     <aside className="params">
       <div className="params-head">
@@ -78,6 +85,16 @@ export function ParametersPanel() {
       <p className="muted small">
         Modifiez n'importe quelle hypothèse : tous les modules et livrables se recalculent instantanément.
       </p>
+
+      <label className="field sector-picker">
+        <span>📦 Charger un modèle de secteur</span>
+        <select defaultValue="" onChange={(e) => { pickSector(e.target.value); e.target.value = ""; }}>
+          <option value="" disabled>Choisir un secteur…</option>
+          {sectorPresets.map((s) => (
+            <option key={s.id} value={s.id}>{s.label}</option>
+          ))}
+        </select>
+      </label>
 
       <Group title="🪪 Identité">
         <Field label="Nom du projet" path="identity.projectName" value={p.identity.projectName} type="text" />
@@ -167,6 +184,7 @@ export function ParametersPanel() {
       <Group title="🎯 Hypothèses globales">
         <Field label="Horizon" path="global.horizonYears" value={p.global.horizonYears} suffix="ans" />
         <Field label="Taux d'actualisation" path="global.discountRate" value={p.global.discountRate} type="pct" step={0.1} />
+        <Field label="Croissance perpétuelle (valeur terminale)" path="global.perpetualGrowthRate" value={p.global.perpetualGrowthRate} type="pct" step={0.1} />
         <Field label="Taux d'IS" path="global.taxRate" value={p.global.taxRate} type="pct" />
       </Group>
     </aside>

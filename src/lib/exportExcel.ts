@@ -78,7 +78,8 @@ export async function exportExcel(
     if (fmt) r.getCell(2).numFmt = fmt;
   };
   sRow("Investissement total", f.totalInvestment, euro);
-  sRow("VAN", f.npv, euro);
+  sRow("Valeur terminale (actualisée)", f.terminalValue, euro);
+  sRow("VAN (incl. valeur terminale)", f.npv, euro);
   if (f.irr !== null) sRow("TRI", f.irr, pct);
   sRow("ROI cumulé", f.roi, pct);
   sRow("Délai de retour (ans)", f.paybackYears ?? 0);

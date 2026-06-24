@@ -1,6 +1,7 @@
 import React from "react";
 import { useApp } from "../state";
 import { ScoreGauge, Section, Stat, Badge, ScoreBar } from "./common";
+import { RadarChart } from "./charts";
 import { Comments } from "./Comments";
 import { fmtEUR, fmtPct } from "../lib/format";
 
@@ -27,6 +28,18 @@ export function GlobalDashboard() {
           </div>
         </div>
       </div>
+
+      <Section title="Profil de l'évaluation (radar)">
+        <RadarChart
+          axes={[
+            { label: "Rentabilité", value: g.modules.financier.score },
+            { label: "Marché", value: g.modules.marche.score },
+            { label: "Tendances", value: (params.market.trendSocietal + params.market.trendSocial + params.market.trendEconomic) / 3 },
+            { label: "Scalabilité", value: params.market.scalabilityPotential },
+            { label: "Passivité", value: g.modules.operationnel.score },
+          ]}
+        />
+      </Section>
 
       <Section title="Articulation des modules (scores pondérés)">
         <ScoreBar

@@ -62,6 +62,7 @@ export const defaultParameters: BusinessParameters = {
     horizonYears: 5,
     discountRate: 0.1,
     taxRate: 0.25,
+    perpetualGrowthRate: 0.02,
   },
 };
 
