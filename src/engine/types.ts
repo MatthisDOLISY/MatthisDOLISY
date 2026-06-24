@@ -84,6 +84,15 @@ export interface GlobalParams {
   perpetualGrowthRate: number; // croissance perpétuelle pour la valeur terminale (0-1)
 }
 
+export interface VatParams {
+  /** Assujetti à la TVA : si false (franchise en base), la TVA sur achats n'est pas déductible. */
+  liable: boolean;
+  /** Taux de TVA applicable (ex: 0.20 = 20%). */
+  rate: number;
+  /** Délai moyen de reversement de la TVA en mois (impact trésorerie / BFR). */
+  lagMonths: number;
+}
+
 export interface BusinessParameters {
   identity: IdentityParams;
   investment: InvestmentParams;
@@ -92,6 +101,7 @@ export interface BusinessParameters {
   operations: OperationsParams;
   market: MarketParams;
   global: GlobalParams;
+  vat: VatParams;
 }
 
 // ---------------------------------------------------------------------------

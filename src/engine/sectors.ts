@@ -79,6 +79,7 @@ export const sectorPresets: SectorPreset[] = [
         p.costs = { cogsPct: 0.32, rentMonthly: 5500, payrollMonthly: 18000, ownerSalaryMonthly: 3500, marketingPctRevenue: 0.03, otherFixedMonthly: 3500, inflationRate: 0.03 };
         p.operations = { managementMode: "active", ownerHoursPerWeek: 60, staffCount: 8, automationLevel: 25, processMaturity: 35, keyManDependency: 80 };
         p.market = { marketSizeM: 60, marketGrowthRate: 0.04, competitionLevel: 75, regulatoryIntensity: 65, barriersToEntry: 30, scalabilityPotential: 30, trendSocietal: 60, trendSocial: 65, trendEconomic: 45 };
+        p.vat = { liable: true, rate: 0.1, lagMonths: 1 }; // restauration sur place : TVA 10%
       }),
   },
   {
@@ -100,6 +101,7 @@ export const sectorPresets: SectorPreset[] = [
         p.operations = { managementMode: "passive", ownerHoursPerWeek: 4, staffCount: 0, automationLevel: 70, processMaturity: 60, keyManDependency: 20 };
         p.market = { marketSizeM: 1200, marketGrowthRate: 0.03, competitionLevel: 50, regulatoryIntensity: 70, barriersToEntry: 60, scalabilityPotential: 50, trendSocietal: 55, trendSocial: 60, trendEconomic: 55 };
         p.global = { horizonYears: 10, discountRate: 0.06, taxRate: 0.25, perpetualGrowthRate: 0.015 };
+        p.vat = { liable: false, rate: 0.2, lagMonths: 1 }; // location nue d'habitation : exonérée de TVA
       }),
   },
   {

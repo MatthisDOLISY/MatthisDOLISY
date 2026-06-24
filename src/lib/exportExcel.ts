@@ -41,6 +41,8 @@ export async function exportExcel(
   addH("Horizon (ans)", p.global.horizonYears);
   addH("Taux d'actualisation", p.global.discountRate);
   addH("Taux d'IS", p.global.taxRate);
+  addH("Assujetti à la TVA", p.vat.liable ? "Oui" : "Non (franchise en base)");
+  addH("Taux de TVA", p.vat.rate);
 
   // --- Feuille Business Plan ---
   const { years, rows } = buildBusinessPlan(p, f, overrides);

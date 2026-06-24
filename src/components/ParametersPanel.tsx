@@ -5,8 +5,8 @@ import { sectorPresets } from "../engine/sectors";
 interface FieldProps {
   label: string;
   path: string;
-  value: number | string;
-  type?: "number" | "text" | "pct" | "select";
+  value: number | string | boolean;
+  type?: "number" | "text" | "pct" | "select" | "bool";
   options?: { value: string; label: string }[];
   step?: number;
   suffix?: string;
@@ -14,6 +14,20 @@ interface FieldProps {
 
 function Field({ label, path, value, type = "number", options, step, suffix }: FieldProps) {
   const { updateParam } = useApp();
+  if (type === "bool") {
+    return (
+      <label className="field">
+        <span>{label}</span>
+        <select
+          value={value ? "true" : "false"}
+          onChange={(e) => updateParam(path, e.target.value === "true")}
+        >
+          <option value="true">Oui</option>
+          <option value="false">Non</option>
+        </select>
+      </label>
+    );
+  }
   if (type === "select") {
     return (
       <label className="field">
@@ -49,8 +63,8 @@ function Field({ label, path, value, type = "number", options, step, suffix }: F
         <input
           type={type}
           step={step}
-          value={value}
-          onChange={(e) => updateParam(path, type === "number" ? e.target.value : e.target.value)}
+          value={value as string | number}
+          onChange={(e) => updateParam(path, e.target.value)}
         />
         {suffix && <em>{suffix}</em>}
       </div>
@@ -186,6 +200,15 @@ export function ParametersPanel() {
         <Field label="Taux d'actualisation" path="global.discountRate" value={p.global.discountRate} type="pct" step={0.1} />
         <Field label="Croissance perpétuelle (valeur terminale)" path="global.perpetualGrowthRate" value={p.global.perpetualGrowthRate} type="pct" step={0.1} />
         <Field label="Taux d'IS" path="global.taxRate" value={p.global.taxRate} type="pct" />
+      </Group>
+
+      <Group title="🧮 Fiscalité & TVA">
+        <Field label="Assujetti à la TVA" path="vat.liable" value={p.vat.liable} type="bool" />
+        <Field label="Taux de TVA" path="vat.rate" value={p.vat.rate} type="pct" />
+        <Field label="Délai de reversement TVA" path="vat.lagMonths" value={p.vat.lagMonths} suffix="mois" />
+        <p className="muted small" style={{ gridColumn: "1 / -1", margin: 0 }}>
+          Montants saisis HT. Si non assujetti (franchise en base), la TVA sur achats devient un surcoût.
+        </p>
       </Group>
     </aside>
   );

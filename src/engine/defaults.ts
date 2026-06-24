@@ -64,6 +64,11 @@ export const defaultParameters: BusinessParameters = {
     taxRate: 0.25,
     perpetualGrowthRate: 0.02,
   },
+  vat: {
+    liable: true,
+    rate: 0.2,
+    lagMonths: 1,
+  },
 };
 
 // Clone profond utilitaire (structuredClone est dispo en Node 22 / navigateurs récents).

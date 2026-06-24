@@ -7,7 +7,7 @@ Application d'évaluation de business : elle articule **plusieurs niveaux d'anal
 ## ✨ Fonctionnalités
 
 ### Modules d'analyse (chacun avec son livrable et ses commentaires)
-- **💰 Financier** — investissement, financement, compte de résultat, cash-flow, **VAN, TRI, ROI, délai de retour, DSCR, seuil de rentabilité**.
+- **💰 Financier** — investissement, financement, compte de résultat, cash-flow, **VAN, TRI, ROI, délai de retour, DSCR, seuil de rentabilité**, **gestion de la TVA** (assujetti / franchise en base, impact trésorerie ou surcoût), et un **résumé d'analyse avec indicateurs clés adaptés au type de business** (récurrent : ARR/MRR/churn/LTV/CAC/Rule of 40 ; transactionnel : panier moyen, marge, point mort ; patrimonial : rendements, cash-on-cash, LTV, DSCR).
 - **⚙️ Opérationnel** — **gestion active / passive** : dépendance au dirigeant, automatisation, maturité des process, indépendance à l'homme-clé.
 - **🌍 Marché** — **contraintes réglementaires**, **barrières à l'entrée**, **scalabilité**, et **projection au regard des hyper-tendances** sociétales, sociales et économiques.
 - **🧭 Synthèse globale** — score pondéré, verdict, **matrice SWOT** et **radar** qui articulent tous les modules.

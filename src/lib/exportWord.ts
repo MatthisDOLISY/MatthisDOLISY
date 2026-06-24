@@ -16,6 +16,7 @@ import type { BusinessParameters } from "../engine/types";
 import type { FinanceResult } from "../engine/finance";
 import type { GlobalAnalysis } from "../engine/scoring";
 import { fmtEUR, fmtPct, fmtNum } from "./format";
+import { buildFinancialSummary } from "../engine/kpis";
 
 // Génère le document d'investissement Word qui SYNTHÉTISE l'ensemble.
 // `narrative` est le texte (éventuellement édité dans l'app ou produit par le LLM)
@@ -85,11 +86,20 @@ export async function exportWord(
 
   // --- 3. Analyse financière ---
   h1("3. Analyse financière");
+  const summary = buildFinancialSummary(p, f);
   para(
     `L'investissement total s'élève à ${fmtEUR(f.totalInvestment)}, financé par ${fmtEUR(
       p.investment.equity
     )} d'apport et ${fmtEUR(p.investment.debt)} de dette.`
   );
+
+  h2(`Résumé d'analyse — ${summary.profileLabel}`);
+  for (const n of summary.narrative) para(n);
+
+  h2("Indicateurs clés");
+  children.push(indicatorsTable(summary.kpis.map((k) => [k.label + (k.hint ? ` (${k.hint})` : ""), k.value])));
+
+  h2("Indicateurs de valorisation");
   children.push(
     indicatorsTable([
       ["Valeur terminale (actualisée)", fmtEUR(f.terminalValue)],

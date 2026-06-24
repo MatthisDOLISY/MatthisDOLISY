@@ -3,17 +3,39 @@ import { useApp } from "../state";
 import { Section, Stat, ScoreBar, InsightList, Badge } from "./common";
 import { Comments } from "./Comments";
 import { LineChart } from "./charts";
+import { buildFinancialSummary } from "../engine/kpis";
 import { fmtEUR, fmtPct, fmtNum } from "../lib/format";
 
 export function FinancialModule() {
   const { finance: f, global: g, params } = useApp();
   const mod = g.modules.financier;
+  const summary = buildFinancialSummary(params, f);
   return (
     <div className="module">
       <div className="module-head">
         <h2>💰 Analyse financière</h2>
         <Badge rating={mod.rating} />
       </div>
+
+      <Section
+        title="Résumé d'analyse & indicateurs clés"
+        right={<span className="profile-tag">{summary.profileLabel}</span>}
+      >
+        <ul className="insights">
+          {summary.narrative.map((n, i) => (
+            <li key={i}>{n}</li>
+          ))}
+        </ul>
+        <div className="kpi-grid">
+          {summary.kpis.map((k) => (
+            <div key={k.label} className={`kpi kpi-${k.tone ?? "neutral"}`}>
+              <div className="kpi-value">{k.value}</div>
+              <div className="kpi-label">{k.label}</div>
+              {k.hint && <div className="kpi-hint">{k.hint}</div>}
+            </div>
+          ))}
+        </div>
+      </Section>
 
       <div className="stat-row">
         <Stat label="Investissement total" value={fmtEUR(f.totalInvestment)} />
@@ -25,6 +47,11 @@ export function FinancialModule() {
         <Stat label="DSCR moyen" value={isFinite(f.averageDSCR) ? fmtNum(f.averageDSCR, 2) : "—"} />
         <Stat label="Seuil de rentabilité" value={fmtEUR(f.breakEvenRevenue)} hint="CA de croisière" />
         <Stat label="Bouclage financement" value={f.fundingGap <= 0 ? "OK" : fmtEUR(-f.fundingGap)} />
+        <Stat
+          label={f.vat.liable ? `TVA nette à reverser (an 1)` : "Surcoût TVA non récup. (an 1)"}
+          value={f.vat.liable ? fmtEUR(f.vat.netDueYear1) : fmtEUR(f.vat.nonDeductibleCostYear1)}
+          hint={f.vat.liable ? `assujetti ${fmtPct(f.vat.rate)}` : "franchise en base"}
+        />
       </div>
 
       <Section title="Notation détaillée">

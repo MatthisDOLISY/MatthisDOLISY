@@ -30,6 +30,15 @@ export interface FinanceResult {
   averageDSCR: number; // couverture du service de la dette
   fundingGap: number; // déficit de financement (capex+BFR - apport - dette)
   contributionMarginPct: number;
+  vat: {
+    liable: boolean;
+    rate: number;
+    collectedYear1: number; // TVA collectée sur ventes (année 1)
+    deductibleYear1: number; // TVA déductible sur achats (année 1)
+    netDueYear1: number; // TVA nette à reverser (année 1)
+    wcImpact: number; // impact sur le BFR (négatif = ressource de trésorerie)
+    nonDeductibleCostYear1: number; // surcoût de TVA non récupérable si non assujetti (année 1)
+  };
 }
 
 // ---- Revenu par année selon le modèle ----
@@ -126,13 +135,43 @@ export function computeIRR(cashflows: number[]): number | null {
 
 export function computeFinance(p: BusinessParameters): FinanceResult {
   const horizon = Math.max(1, Math.round(p.global.horizonYears));
-  const totalInvestment = p.investment.capex + p.investment.workingCapital;
+
+  // --- TVA ---
+  // Hypothèse : tous les montants saisis sont HORS TAXES (HT).
+  // Si l'entreprise n'est PAS assujettie (franchise en base), la TVA sur les
+  // achats taxables n'est pas récupérable : elle devient un surcoût réel.
+  const vatRate = p.vat.rate;
+  // Facteur appliqué aux charges d'exploitation portant de la TVA (achats, loyer,
+  // marketing, autres). On considère la TVA sur l'investissement comme neutre
+  // (récupérable si assujetti ; non applicable pour l'immobilier ancien, étalée sinon).
+  const vatCostFactor = p.vat.liable ? 1 : 1 + vatRate;
+
+  const effectiveCapex = p.investment.capex;
+  const totalInvestmentBase = effectiveCapex + p.investment.workingCapital;
+
+  // Impact de la TVA sur le BFR (régime assujetti) : la TVA collectée sur les
+  // ventes est encaissée puis reversée avec un décalage → ressource de trésorerie
+  // (BFR négatif). Calculé sur l'année 1.
+  const rev1 = revenueForYear(p, 0);
+  const vatCollectedY1 = p.vat.liable ? rev1 * vatRate : 0;
+  const vatDeductibleBaseY1 =
+    rev1 * p.costs.cogsPct +
+    rev1 * p.costs.marketingPctRevenue +
+    (p.costs.rentMonthly + p.costs.otherFixedMonthly) * 12;
+  const vatDeductibleY1 = p.vat.liable ? vatDeductibleBaseY1 * vatRate : 0;
+  const vatNetDueY1 = vatCollectedY1 - vatDeductibleY1;
+  const vatWcImpact = p.vat.liable
+    ? -(vatNetDueY1 / 12) * p.vat.lagMonths
+    : 0;
+  const nonDeductibleCostY1 = p.vat.liable ? 0 : vatDeductibleBaseY1 * vatRate;
+
+  const totalInvestment = totalInvestmentBase + vatWcImpact;
   const fundingGap =
     totalInvestment - p.investment.equity - p.investment.debt;
 
   const depreciation =
     p.investment.depreciationYears > 0
-      ? p.investment.capex / p.investment.depreciationYears
+      ? effectiveCapex / p.investment.depreciationYears
       : 0;
 
   const loan = loanSchedule(
@@ -151,17 +190,18 @@ export function computeFinance(p: BusinessParameters): FinanceResult {
   for (let i = 0; i < horizon; i++) {
     const inflation = Math.pow(1 + p.costs.inflationRate, i);
     const revenue = revenueForYear(p, i);
-    const cogs = revenue * p.costs.cogsPct;
+    // COGS portent de la TVA : surcoût si non assujetti.
+    const cogs = revenue * p.costs.cogsPct * vatCostFactor;
     const grossProfit = revenue - cogs;
 
+    // Loyer, autres charges et marketing portent de la TVA ; salaires non.
     const fixedAnnual =
-      (p.costs.rentMonthly +
+      ((p.costs.rentMonthly + p.costs.otherFixedMonthly) * vatCostFactor +
         p.costs.payrollMonthly +
-        p.costs.ownerSalaryMonthly +
-        p.costs.otherFixedMonthly) *
+        p.costs.ownerSalaryMonthly) *
       12 *
       inflation;
-    const marketing = revenue * p.costs.marketingPctRevenue;
+    const marketing = revenue * p.costs.marketingPctRevenue * vatCostFactor;
     const opex = fixedAnnual + marketing;
 
     const ebitda = grossProfit - opex;
@@ -242,16 +282,15 @@ export function computeFinance(p: BusinessParameters): FinanceResult {
   // Seuil de rentabilité en régime de croisière (dernière année)
   const lastInflation = Math.pow(1 + p.costs.inflationRate, horizon - 1);
   const fixedCruise =
-    (p.costs.rentMonthly +
+    ((p.costs.rentMonthly + p.costs.otherFixedMonthly) * vatCostFactor +
       p.costs.payrollMonthly +
-      p.costs.ownerSalaryMonthly +
-      p.costs.otherFixedMonthly) *
+      p.costs.ownerSalaryMonthly) *
       12 *
       lastInflation +
     depreciation +
     loan.interest[horizon - 1];
   const contributionMarginPct =
-    1 - p.costs.cogsPct - p.costs.marketingPctRevenue;
+    1 - (p.costs.cogsPct + p.costs.marketingPctRevenue) * vatCostFactor;
   const breakEvenRevenue =
     contributionMarginPct > 0 ? fixedCruise / contributionMarginPct : Infinity;
 
@@ -269,5 +308,14 @@ export function computeFinance(p: BusinessParameters): FinanceResult {
     averageDSCR,
     fundingGap,
     contributionMarginPct,
+    vat: {
+      liable: p.vat.liable,
+      rate: vatRate,
+      collectedYear1: vatCollectedY1,
+      deductibleYear1: vatDeductibleY1,
+      netDueYear1: vatNetDueY1,
+      wcImpact: vatWcImpact,
+      nonDeductibleCostYear1: nonDeductibleCostY1,
+    },
   };
 }
