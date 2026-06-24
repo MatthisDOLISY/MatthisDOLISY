@@ -32,6 +32,7 @@ export function FinancialModule() {
               <div className="kpi-value">{k.value}</div>
               <div className="kpi-label">{k.label}</div>
               {k.hint && <div className="kpi-hint">{k.hint}</div>}
+              {k.benchmark && <div className="kpi-bench">réf. {k.benchmark}</div>}
             </div>
           ))}
         </div>

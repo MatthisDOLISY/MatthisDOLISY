@@ -26,6 +26,7 @@ Chargez en un clic un projet type : **SaaS B2B, e-commerce/DNVB, restauration, i
 ### Livrables modifiables dans l'application
 - **📊 Business Plan Excel (`.xlsx`)** — grille recalculée en direct, **cellules éditables** (double-clic pour forcer une valeur), export multi-feuilles (Hypothèses, Business Plan, Synthèse, Scores).
 - **📄 Document d'investissement Word (`.docx`)** — **synthétise l'ensemble** des modules ; section de synthèse éditable, rédaction/révision assistée par le LLM.
+- **🖨️ Export PDF** — le document d'investissement complet en PDF (impression navigateur, sans dépendance, texte sélectionnable), avec les indicateurs clés et leurs benchmarks.
 - **💬 Commentaires** sur chaque module/livrable, **pris en compte par le LLM** pour ajuster les analyses.
 
 ## 🚀 Démarrage

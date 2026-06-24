@@ -1,6 +1,7 @@
 import React from "react";
 import { useApp } from "../state";
 import { exportWord } from "../lib/exportWord";
+import { exportPdf } from "../lib/exportPdf";
 import { sendChat } from "../llm/client";
 import { Comments } from "./Comments";
 
@@ -60,6 +61,9 @@ export function InvestmentDocModule() {
           <button className="ghost" onClick={draftWithLLM} disabled={drafting}>
             {drafting ? "Rédaction…" : "✨ Rédiger la synthèse avec le LLM"}
           </button>
+          <button className="ghost" onClick={() => exportPdf(params, finance, global, narrative)}>
+            🖨️ Exporter en PDF
+          </button>
           <button className="primary" onClick={download} disabled={busy}>
             {busy ? "Génération…" : "⬇️ Exporter en .docx"}
           </button>
@@ -102,6 +106,9 @@ export function InvestmentDocModule() {
           <li>Matrice SWOT</li>
           <li>Recommandation</li>
         </ol>
+        <p className="muted small">
+          💡 L'export PDF ouvre la fenêtre d'impression du navigateur : choisissez « Enregistrer au format PDF » comme destination.
+        </p>
       </div>
 
       <Comments module="investissement" />
