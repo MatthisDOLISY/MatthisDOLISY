@@ -82,6 +82,13 @@ const SETS: Record<string, BenchmarkSet> = {
     ebitdaMargin: { good: 0.08, ok: 0.03, ref: "> 8 %" },
     contributionMargin: { good: 0.2, ok: 0.1, ref: "> 20 %" },
   },
+  services_conseil: {
+    key: "services_conseil",
+    label: "Conseil / ESN (régie)",
+    grossMargin: { good: 0.35, ok: 0.25, ref: "> 35 % (marge de production ESN)" },
+    ebitdaMargin: { good: 0.12, ok: 0.06, ref: "> 12 %" },
+    contributionMargin: { good: 0.3, ok: 0.2, ref: "> 30 %" },
+  },
   // --- Patrimonial ---
   immobilier_residentiel: {
     key: "immobilier_residentiel",
@@ -145,6 +152,7 @@ export const benchmarkSectorOptions: { value: string; label: string }[] = [
   { value: "restaurant", label: "Restauration" },
   { value: "ecommerce", label: "E-commerce / DNVB" },
   { value: "retail", label: "Commerce / retail" },
+  { value: "services_conseil", label: "Conseil / ESN (régie)" },
   { value: "immobilier_residentiel", label: "Immobilier résidentiel" },
   { value: "immobilier_commercial", label: "Immobilier commercial" },
 ];
@@ -161,6 +169,8 @@ function autoDetect(p: BusinessParameters): string {
   if (profile === "transactionnel") {
     if (/restau|food|brasserie|bistro|traiteur/.test(t)) return "restaurant";
     if (/e-?commerce|dnvb|en ligne|shop|boutique/.test(t)) return "ecommerce";
+    if (/conseil|consulting|esn|ssii|r[ée]gie|services? num|informatique|freelanc/.test(t))
+      return "services_conseil";
     return "retail";
   }
   // patrimonial

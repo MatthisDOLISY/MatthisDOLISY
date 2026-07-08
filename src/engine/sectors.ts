@@ -129,4 +129,30 @@ export const sectorPresets: SectorPreset[] = [
         p.market = { marketSizeM: 250, marketGrowthRate: 0.07, competitionLevel: 70, regulatoryIntensity: 45, barriersToEntry: 50, scalabilityPotential: 65, trendSocietal: 75, trendSocial: 80, trendEconomic: 50 };
       }),
   },
+  {
+    id: "esn_sap",
+    label: "ESN / Conseil SAP (Île-de-France)",
+    build: () =>
+      preset((p) => {
+        p.identity = {
+          projectName: "ESN « SAP Advisory »",
+          sector: "Conseil / ESN (régie)",
+          location: "Paris, Île-de-France",
+          businessModel:
+            "Mise à disposition de consultants SAP technico-fonctionnels chez des grands comptes (régie / forfait), facturation au TJM",
+          description:
+            "ESN spécialisée SAP en Île-de-France : placement de consultants technico-fonctionnels chez des grands comptes, portée par la vague de migration S/4HANA. Revenu = jours facturés × taux journalier moyen (TJM).",
+          benchmarkSector: "services_conseil",
+        };
+        // Asset-light mais BFR important (consultants payés mensuellement, clients à 45-60 j).
+        p.investment = { capex: 30000, workingCapital: 220000, depreciationYears: 3, equity: 130000, debt: 120000, interestRate: 0.05, loanTermYears: 5 };
+        // Modèle unitaire : unités = jours facturés/an (≈ 10 consultants × 215 j), prix = TJM.
+        p.revenue = { model: "unitaire", unitsYear1: 2150, pricePerUnit: 700, customersYear1: 0, arpu: 0, churnRate: 0, growthRate: 0.2, rampUpYear1: 0.65 };
+        // COGS = coût chargé des consultants délivrant la mission (~64 % du facturé).
+        p.costs = { cogsPct: 0.64, rentMonthly: 3500, payrollMonthly: 20000, ownerSalaryMonthly: 5000, marketingPctRevenue: 0.02, otherFixedMonthly: 4000, inflationRate: 0.03 };
+        p.operations = { managementMode: "hybride", ownerHoursPerWeek: 50, staffCount: 12, automationLevel: 40, processMaturity: 45, keyManDependency: 65 };
+        p.market = { marketSizeM: 2000, marketGrowthRate: 0.08, competitionLevel: 75, regulatoryIntensity: 35, barriersToEntry: 35, scalabilityPotential: 60, trendSocietal: 55, trendSocial: 60, trendEconomic: 65 };
+        p.global = { horizonYears: 5, discountRate: 0.12, taxRate: 0.25, perpetualGrowthRate: 0.02 };
+      }),
+  },
 ];

@@ -86,6 +86,8 @@ Contraintes STRICTES sur ce bloc :
 
 Clés disponibles : identity.location, identity.sector, identity.businessModel ; investment.capex, investment.workingCapital, investment.equity, investment.debt, investment.interestRate, investment.loanTermYears ; revenue.customersYear1, revenue.arpu, revenue.churnRate, revenue.growthRate, revenue.unitsYear1, revenue.pricePerUnit ; costs.cogsPct, costs.rentMonthly, costs.payrollMonthly, costs.ownerSalaryMonthly, costs.marketingPctRevenue, costs.otherFixedMonthly ; operations.managementMode, operations.ownerHoursPerWeek, operations.staffCount, operations.automationLevel, operations.keyManDependency ; market.marketSizeM, market.marketGrowthRate, market.competitionLevel, market.regulatoryIntensity, market.barriersToEntry, market.scalabilityPotential ; global.horizonYears, global.discountRate, global.taxRate ; vat.rate.
 
+- Si l'utilisateur demande de CRÉER, "simuler" ou construire un PROJET ENTIER (et non un simple ajustement), fournis un bloc params COMPLET et cohérent couvrant en une seule fois l'identité (identity.projectName, identity.sector, identity.location, identity.businessModel), l'investissement, les revenus, les charges, l'opérationnel et le marché — soit 12 à 20 clés. Ne te contente pas de 2 ou 3 clés.
+
 Après avoir fourni ce bloc, précise à l'utilisateur de cliquer sur le bouton « Appliquer ces changements » qui apparaît sous ta réponse.
 - Prends en compte les commentaires de l'utilisateur sur les livrables pour ajuster ton analyse.`;
 
