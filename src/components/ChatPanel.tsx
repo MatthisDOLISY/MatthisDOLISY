@@ -133,8 +133,12 @@ export function ChatPanel() {
   );
 }
 
-// Rend le texte en masquant les blocs ```params``` (déjà affichés séparément).
+// Rend le texte en masquant les blocs de code de paramètres (déjà affichés
+// séparément via le bouton « Appliquer »). On retire les blocs ```params et
+// ```json pour ne pas afficher le JSON brut dans la conversation.
 function renderText(text: string): React.ReactNode {
-  const cleaned = text.replace(/```params[\s\S]*?```/g, "").trim();
+  const cleaned = text
+    .replace(/```(?:params|json)?[\s\S]*?```/g, "")
+    .trim();
   return cleaned.split("\n").map((line, i) => <p key={i}>{line}</p>);
 }

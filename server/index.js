@@ -70,13 +70,24 @@ Tu reçois en contexte les PARAMÈTRES du projet (JSON), les RÉSULTATS d'analys
 
 Règles :
 - Réponds en français, de façon concise, concrète et chiffrée.
-- Quand l'utilisateur veut MODIFIER une hypothèse (investissement, localisation, prix, charges, etc.), propose les changements puis termine ta réponse par un bloc de paramètres modifiés au format EXACT :
+- Quand l'utilisateur veut MODIFIER une hypothèse (investissement, localisation, prix, charges, etc.), explique d'abord brièvement l'impact attendu, PUIS termine ta réponse par UN SEUL bloc de code au format EXACT ci-dessous.
+
+FORMAT OBLIGATOIRE du bloc (respecte-le à la lettre) :
 \`\`\`params
-{ "chemin.vers.le.parametre": valeur, ... }
+{"investment.capex": 120000, "identity.location": "Paris, Île-de-France", "revenue.growthRate": 0.18}
 \`\`\`
-Utilise la notation pointée des clés du JSON de paramètres (ex: "investment.capex", "market.regulatoryIntensity", "identity.location"). N'inclus QUE les clés qui changent.
-- Prends en compte les commentaires de l'utilisateur sur les livrables pour ajuster ton analyse.
-- Explique toujours brièvement l'impact attendu d'un changement avant de fournir le bloc params.`;
+
+Contraintes STRICTES sur ce bloc :
+- Commence par \`\`\`params (et non json).
+- Contient UNIQUEMENT un objet JSON PLAT et VALIDE, sur une seule ligne.
+- Clés en notation pointée (ex: "investment.capex", "operations.staffCount", "identity.location"). PAS de clé "params" englobante, PAS d'objets imbriqués.
+- N'utilise JAMAIS de points de suspension "..." ni de commentaires.
+- N'inclus QUE les clés réellement modifiées, avec des valeurs numériques (sans symbole €, ni %, ni espaces) ou du texte entre guillemets.
+
+Clés disponibles : identity.location, identity.sector, identity.businessModel ; investment.capex, investment.workingCapital, investment.equity, investment.debt, investment.interestRate, investment.loanTermYears ; revenue.customersYear1, revenue.arpu, revenue.churnRate, revenue.growthRate, revenue.unitsYear1, revenue.pricePerUnit ; costs.cogsPct, costs.rentMonthly, costs.payrollMonthly, costs.ownerSalaryMonthly, costs.marketingPctRevenue, costs.otherFixedMonthly ; operations.managementMode, operations.ownerHoursPerWeek, operations.staffCount, operations.automationLevel, operations.keyManDependency ; market.marketSizeM, market.marketGrowthRate, market.competitionLevel, market.regulatoryIntensity, market.barriersToEntry, market.scalabilityPotential ; global.horizonYears, global.discountRate, global.taxRate ; vat.rate.
+
+Après avoir fourni ce bloc, précise à l'utilisateur de cliquer sur le bouton « Appliquer ces changements » qui apparaît sous ta réponse.
+- Prends en compte les commentaires de l'utilisateur sur les livrables pour ajuster ton analyse.`;
 
 app.get("/api/health", (req, res) => {
   res.json({
@@ -154,12 +165,48 @@ app.post("/api/chat", async (req, res) => {
   }
 });
 
-// Extrait un éventuel bloc ```params {...}``` de la réponse du LLM.
+// Extrait les changements de paramètres proposés par le LLM, de façon TOLÉRANTE
+// (les modèles locaux respectent mal le format strict) :
+// - accepte un bloc ```params, ```json, ``` ... ``` ou, à défaut, le 1er objet {…}
+// - nettoie les ellipses "..." et virgules superflues
+// - déballe un éventuel objet { "params": {…} }
+// - ne conserve que les clés en notation pointée (ex: "investment.capex")
 function extractParams(text) {
-  const m = text.match(/```params\s*([\s\S]*?)```/);
-  if (!m) return null;
+  let raw = null;
+  const fenced = text.match(/```(?:params|json)?\s*([\s\S]*?)```/i);
+  if (fenced) raw = fenced[1];
+  if (!raw) {
+    const brace = text.match(/\{[\s\S]*\}/);
+    if (brace) raw = brace[0];
+  }
+  if (!raw) return null;
+
+  const obj = parseLoose(raw);
+  if (!obj || typeof obj !== "object") return null;
+
+  const candidate =
+    obj.params && typeof obj.params === "object" ? obj.params : obj;
+
+  const out = {};
+  for (const [k, v] of Object.entries(candidate)) {
+    if (
+      k.includes(".") &&
+      (typeof v === "number" || typeof v === "string" || typeof v === "boolean")
+    ) {
+      out[k] = v;
+    }
+  }
+  return Object.keys(out).length ? out : null;
+}
+
+function parseLoose(raw) {
+  let s = raw.trim();
+  s = s.replace(/\.\.\./g, ""); // supprime les ellipses
+  s = s.replace(/,\s*,/g, ","); // virgules doubles
+  s = s.replace(/\{\s*,/g, "{"); // { , -> {
+  s = s.replace(/,\s*([}\]])/g, "$1"); // virgule avant } ou ]
   try {
-    return JSON.parse(m[1].trim());
+    return JSON.parse(s);
   } catch {
     return null;
   }
