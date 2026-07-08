@@ -25,11 +25,11 @@ export async function sendChat(
   return res.json();
 }
 
-export async function checkHealth(): Promise<{ llm: boolean; model: string }> {
+export async function checkHealth(): Promise<{ llm: boolean; provider: string | null; model: string }> {
   try {
     const res = await fetch("/api/health");
     return await res.json();
   } catch {
-    return { llm: false, model: "" };
+    return { llm: false, provider: null, model: "" };
   }
 }

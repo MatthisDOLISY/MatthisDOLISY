@@ -23,7 +23,7 @@ Les **benchmarks des KPI sont calibrés par sous-secteur** (SaaS, abonnement B2C
 
 ### Pilotage
 - **Panneau de paramètres** : modifiez n'importe quelle hypothèse (investissement, localisation, prix, charges, tendances…) → tout se recalcule en direct.
-- **Assistant LLM intégré** : discutez de vos changements (« et si je m'installe à Bordeaux ? », « passe le CAPEX à 250k »). Le LLM propose des **changements de paramètres applicables en un clic**.
+- **Assistant LLM intégré** : discutez de vos changements (« et si je m'installe à Bordeaux ? », « passe le CAPEX à 250k »). Le LLM propose des **changements de paramètres applicables en un clic**. Compatible avec plusieurs fournisseurs, dont des options **gratuites** : **Groq**, **Google Gemini**, ou **Ollama** en local (voir `.env.example`).
 
 ### Livrables modifiables dans l'application
 - **📊 Business Plan Excel (`.xlsx`)** — grille recalculée en direct, **cellules éditables** (double-clic pour forcer une valeur), export multi-feuilles (Hypothèses, Business Plan, Synthèse, Scores).
@@ -37,7 +37,7 @@ Les **benchmarks des KPI sont calibrés par sous-secteur** (SaaS, abonnement B2C
 npm install
 
 # (Optionnel) activer l'assistant LLM
-cp .env.example .env   # puis renseignez ANTHROPIC_API_KEY
+cp .env.example .env   # puis renseignez une clé (Groq gratuit recommandé)
 
 npm run dev            # client (5173) + API (8787)
 ```
@@ -69,4 +69,4 @@ les calculs financiers, qui alimentent les scores de chaque module, qui alimente
 la synthèse globale et les livrables.
 
 ## 🔧 Stack
-React + TypeScript (Vite) · Express · ExcelJS · docx · SDK Anthropic
+React + TypeScript (Vite) · Express · ExcelJS · docx · LLM multi-fournisseurs (Groq / OpenAI / Gemini / Ollama / Anthropic)

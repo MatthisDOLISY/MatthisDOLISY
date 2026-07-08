@@ -18,10 +18,14 @@ export function ChatPanel() {
   const [input, setInput] = React.useState("");
   const [busy, setBusy] = React.useState(false);
   const [llmOn, setLlmOn] = React.useState<boolean | null>(null);
+  const [providerName, setProviderName] = React.useState<string | null>(null);
   const scrollRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    checkHealth().then((h) => setLlmOn(h.llm));
+    checkHealth().then((h) => {
+      setLlmOn(h.llm);
+      setProviderName(h.provider);
+    });
   }, []);
 
   React.useEffect(() => {
@@ -76,13 +80,13 @@ export function ChatPanel() {
   return (
     <div className="chat">
       <div className="chat-head">
-        <h3>🤖 Assistant LLM</h3>
-        <span className={`llm-dot ${llmOn ? "on" : "off"}`} title={llmOn ? "LLM connecté" : "LLM non configuré"} />
+        <h3>🤖 Assistant LLM{providerName ? ` · ${providerName}` : ""}</h3>
+        <span className={`llm-dot ${llmOn ? "on" : "off"}`} title={llmOn ? `Connecté (${providerName})` : "LLM non configuré"} />
       </div>
       {llmOn === false && (
         <div className="chat-warn">
-          LLM non configuré. Ajoutez <code>ANTHROPIC_API_KEY</code> dans <code>.env</code> et relancez. Les
-          analyses et exports fonctionnent sans le LLM.
+          LLM non configuré. Ajoutez une clé gratuite <code>GROQ_API_KEY</code> dans <code>.env</code> et relancez.
+          Les analyses et exports fonctionnent sans le LLM.
         </div>
       )}
       <div className="chat-messages" ref={scrollRef}>
